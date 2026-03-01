@@ -94,3 +94,16 @@ python3 problems/tic_tac_toe.py
 ---
 
 *Based on: Russell, S. and Norvig, P. — Artificial Intelligence: A Modern Approach, 4th Edition*
+
+---
+
+## Domain References
+
+1. Guttikunda, S. (2021). *10 Frequently Asked Questions on Air Quality Index.*
+   SIM-air Working Paper Series #46-2021. urbanemissions.info
+
+2. AQI Calculation Tutorial — CPCB official methodology notebook (provided by instructor)
+   Formula source: https://app.cpcbccr.com/ccr_docs/How_AQI_Calculated.pdf
+
+> Note: AQI agent uses CPCB breakpoint interpolation formula with 24-hr rolling averages
+> for aerosols (PM2.5, PM10) and 8-hr max for gases (CO, O3), as per both references above.
