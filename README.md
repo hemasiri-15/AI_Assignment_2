@@ -11,19 +11,30 @@
 AI_Assignment_2/
 │
 ├── README.md
+├── requirements.txt
+│
+├── docs/
+│   ├── agent_architecture.md
+│   ├── turing_vs_captcha.md
+│   └── search_algorithm_analysis.md
 │
 ├── Turing_Captcha/
 │   ├── architecture_design.md
-│   └── turing_captcha_demo.py
+│   ├── captcha_generator.py
+│   └── captcha_demo.py
 │
 ├── AQI_Agent/
 │   ├── aqi_agent.py
-│   └── sensor_data.csv
+│   ├── aqi_rules.py
+│   ├── sensor_data.csv
+│   └── README.md
 │
 └── Search_Algorithms/
     ├── bfs.py
     ├── dfs.py
+    ├── dls.py
     ├── performance_comparison.py
+    │
     └── problems/
         ├── missionaries_cannibals.py
         ├── water_jug.py
