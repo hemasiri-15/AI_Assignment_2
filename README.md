@@ -45,6 +45,66 @@ AI_Assignment_2/
 
 ---
 
+## 1. Turing Test & CAPTCHA
+
+### What is the Turing Test?
+Proposed by Alan Turing in 1950, the Turing Test determines whether a machine
+can exhibit intelligence equivalent to a human.
+
+- A human judge communicates with both a human and a machine
+- The judge does not know which is the machine
+- If the judge cannot reliably distinguish them, the machine passes the test
+
+### What is CAPTCHA?
+**CAPTCHA** — Completely Automated Public Turing test to tell Computers and
+Humans Apart.
+
+It is a security mechanism that prevents automated bots from performing actions
+like creating fake accounts, spamming forms, or brute-force login attempts.
+
+> Key difference: Turing Test checks if a machine can imitate a human.
+> CAPTCHA checks if a user is human rather than a bot.
+
+### Architecture
+```
+Turing Test:
+Human Interrogator
+      ↓ (text questions)
+Communication Interface
+      ↙              ↘
+AI Agent          Human Participant
+      ↘              ↙
+   Judge's Decision
+      ↓
+Human / Machine verdict
+
+CAPTCHA:
+Challenge Generator (random distorted text)
+      ↓
+User Interface (display CAPTCHA)
+      ↓
+User Response + Timing Analysis
+      ↓
+Response Validator
+      ↓
+Allow / Deny Access
+```
+
+### Implementation
+Our implementation includes:
+- Random CAPTCHA generation (letters + digits)
+- Character distortion using noise symbols
+- Bot detection via response timing (bots respond in milliseconds)
+- CAPTCHA regeneration after each attempt
+- Turing Test simulation — judge tries to identify human vs AI
+
+**Files:**
+- `Turing_Captcha/captcha_generator.py` — CAPTCHA engine
+- `Turing_Captcha/captcha_demo.py` — full Turing Test + CAPTCHA demo
+- `Turing_Captcha/architecture_design.md` — detailed architecture
+
+---
+
 ## How to Run
 
 ### Install dependencies
@@ -64,7 +124,7 @@ cd Turing_Captcha
 python3 turing_captcha_demo.py
 ```
 
-### Search Algorithms
+### Search Algorithms & Performance Comparison
 ```bash
 cd Search_Algorithms
 
@@ -88,7 +148,7 @@ python3 dls.py
 
 ## 	Concepts Covered
 
-### Agent Types (AIMA Chapter 2)
+### Agent Types
 
 | Agent | Type | File |
 |-------|------|------|
@@ -96,7 +156,7 @@ python3 dls.py
 | CAPTCHA | Simple Reflex Agent | turing_captcha_demo.py |
 | Turing Bot | Model-Based Agent | turing_captcha_demo.py |
 
-### Search Algorithms (AIMA Chapter 3)
+### Search Algorithms
 
 | Algorithm | Queue Used | Complete | Optimal | Space |
 |-----------|-----------|----------|---------|-------|
@@ -116,6 +176,60 @@ python3 dls.py
 
 ---
 
+### Problems Implemented
+
+---
+
+#### Water Jug Problem
+Move water between a 4L and 3L jug to get exactly 2L in jug A.
+
+**State Representation:** `(a, b)` — litres in jug A and jug B
+
+| | Value |
+|--|-------|
+| Initial State | `(0, 0)` |
+| Goal State | `(2, _)` |
+| Actions | Fill A, Fill B, Empty A, Empty B, Pour A→B, Pour B→A |
+
+---
+
+#### Missionaries and Cannibals
+Move 3 missionaries and 3 cannibals across a river safely.
+
+**State Representation:** `(M, C, B)` where M = missionaries on left,
+C = cannibals on left, B = boat position (0=left, 1=right)
+
+| | Value |
+|--|-------|
+| Initial State | `(3, 3, 0)` |
+| Goal State | `(0, 0, 1)` |
+| Constraint | Cannibals must never outnumber missionaries on either bank |
+
+---
+
+#### Eight Queens
+Place 8 queens on a chessboard so none attack each other.
+
+**State Representation:** Tuple where `state[col]` = row of queen in that column
+
+| | Value |
+|--|-------|
+| Initial State | Empty board `()` |
+| Goal State | 8 queens placed, none attacking |
+| Valid Solutions | 92 |
+
+---
+
+#### Tic Tac Toe
+Find a winning sequence for X on a 3×3 board.
+
+**State Representation:** Tuple of 9 cells, each X / O / empty
+
+| | Value |
+|--|-------|
+| Initial State | All cells empty |
+| Goal State | 3 X's in a row/column/diagonal |
+
 ## What is AQI?
 
 The **Air Quality Index (AQI)** is a standardized indicator that communicates
@@ -127,6 +241,15 @@ multiple pollutant measurements into a single number with a colour-coded categor
 > — Guttikunda, SIM-air Working Paper #46-2021
 
 ---
+
+### PEAS Description
+
+| Component | Description |
+|-----------|-------------|
+| **Performance** | Correct AQI category and advisory per reading |
+| **Environment** | City air — PM2.5, PM10, SO2, NOx, NH3, CO, O3 |
+| **Actuators** | Console output (AQI value, category, advisory) |
+| **Sensors** | CSV file rows — one row = one hourly percept |
 
 ## How AQI is Computed (CPCB Method)
 
@@ -168,7 +291,7 @@ The **final AQI = maximum of all sub-indices** (never an average).
 ---
 
 ## AQI Categories (India — CPCB Standard)
-
+	
 | AQI Range | Category | Health Impact |
 |-----------|----------|---------------|
 | 0–50 | Good | No health risk |
@@ -203,18 +326,22 @@ Output to console (Actuator)
 ### Scalability
 The agent is designed for future upgrades as the course progresses:
 
-| Now (Assignment 2) | Future Upgrade |
-|--------------------|----------------|
-| Simple Reflex Agent | Model-Based Agent with memory |
-| CSV file input | Live IoT sensor feed |
-| Console output | Web dashboard / alerts |
-| India CPCB standard | Multi-country AQI support |
+| Module | Purpose | Future Upgrade |
+|--------|---------|----------------|
+| `agent/subindex.py` | Sub-index functions | Add new pollutants here only |
+| `agent/environment.py` | Sensor data loading | Add rolling window averaging |
+| `agent/agent_core.py` | Agent function + rules | Upgrade to Model-Based agent |
+| `aqi_agent.py` | Entry point | No changes needed |
 
+**Files:**
+- `AQI_Agent/aqi_agent.py` — main agent entry point
+- `AQI_Agent/agent/` — modular components
+- `AQI_Agent/sensor_data.csv` — sensor input data
 
 ## Domain References
 
 1. Guttikunda, S. (2021). *10 Frequently Asked Questions on Air Quality Index.*
-   SIM-air Working Paper Series #46-2021. urbanemissions.info
+	   SIM-air Working Paper Series #46-2021. urbanemissions.info
 
 2. AQI Calculation Tutorial — CPCB official methodology notebook (provided by instructor)
    Formula source: https://app.cpcbccr.com/ccr_docs/How_AQI_Calculated.pdf
