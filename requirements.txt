@@ -1,0 +1,5 @@
+# AI Assignment 2 Requirements
+
+numpy
+pandas
+matplotlib
