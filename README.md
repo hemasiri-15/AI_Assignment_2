@@ -25,16 +25,17 @@ AI_Assignment_2/
 │
 ├── AQI_Agent/
 │   ├── aqi_agent.py
-│   ├── aqi_rules.py
 │   ├── sensor_data.csv
-│   └── README.md
+│   └── agent/
+│       ├── subindex.py
+│       ├── environment.py
+│       └── agent_core.py
 │
 └── Search_Algorithms/
     ├── bfs.py
     ├── dfs.py
     ├── dls.py
     ├── performance_comparison.py
-    │
     └── problems/
         ├── missionaries_cannibals.py
         ├── water_jug.py
@@ -45,6 +46,11 @@ AI_Assignment_2/
 ---
 
 ## How to Run
+
+### Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
 ### AQI Agent
 ```bash
@@ -72,9 +78,15 @@ python3 problems/eight_queens.py
 python3 problems/tic_tac_toe.py
 ```
 
+### DLS (Depth-Limited Search) Demo
+```bash
+cd Search_Algorithms
+python3 dls.py
+```
+
 ---
 
-## Concepts Covered
+## 	Concepts Covered
 
 ### Agent Types (AIMA Chapter 2)
 
