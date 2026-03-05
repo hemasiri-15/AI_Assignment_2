@@ -5,6 +5,17 @@
 
 ---
 
+## Table of Contents
+
+1. [Turing Test & CAPTCHA](#1-turing-test--captcha)
+2. [AQI Simple Reflex Agent](#2-aqi-reflex-agent)
+3. [Search Algorithms](#3-search-algorithms)
+4. [Performance Results](#performance-comparison-results)
+5. [How to Run](#how-to-run)
+6. [Domain References](#domain-references)
+
+---
+
 ## Folder Structure
 
 ```
@@ -46,17 +57,6 @@ AI_Assignment_2/
         ├── eight_queens.py
         └── tic_tac_toe.py
 ```
-
----
-	
-## Table of Contents
-1. [Turing Test & CAPTCHA](#1-turing-test--captcha)
-2. [AQI Simple Reflex Agent](#2-aqi-reflex-agent)
-3. [Search Algorithms](#3-search-algorithms)
-4. [Performance Results](#performance-comparison-results)
-5. [How to Run](#how-to-run)
-6. [Team](#team)
-7. [Domain References](#domain-references)
 
 ---
 
@@ -120,52 +120,113 @@ Our implementation includes:
 
 ---
 
-## How to Run
+## What is AQI?
 
-### Install dependencies
-```bash
-pip install -r requirements.txt
-```
+The **Air Quality Index (AQI)** is a standardized indicator that communicates
+how polluted the air currently is and the associated health risks. It unifies
+multiple pollutant measurements into a single number with a colour-coded category.
 
-### AQI Agent
-```bash
-cd AQI_Agent
-python3 aqi_agent.py
-```
-
-### Turing Test and CAPTCHA Demo
-```bash
-cd Turing_Captcha
-python3 turing_captcha_demo.py
-```
-
-### Image CAPTCHA Generator
-```bash
-cd Turing_Captcha
-python3 captcha_image.py
-```
-
-### Search Algorithms Performance Comparison
-```bash
-cd Search_Algorithms
-python3 performance_comparison.py
-python3 problems/missionaries_cannibals.py
-python3 problems/water_jug.py
-python3 problems/eight_queens.py
-python3 problems/tic_tac_toe.py
-```
-
-### Individual Algorithm Demos
-```bash
-cd Search_Algorithms
-python3 bfs.py
-python3 dfs.py
-python3 dls.py
-```
+> "AQI allows us to see and understand the breadth and depth of air quality
+> at a location or city, as a simple coloured symbol."
+> — Guttikunda, SIM-air Working Paper #46-2021
 
 ---
 
-## 	Concepts Covered
+### PEAS Description
+
+| Component | Description |
+|-----------|-------------|
+| **Performance** | Correct AQI category and advisory per reading |
+| **Environment** | City air — PM2.5, PM10, SO2, NOx, NH3, CO, O3 |
+| **Actuators** | Console output (AQI value, category, advisory) |
+| **Sensors** | CSV file rows — one row = one hourly percept |
+
+## How AQI is Computed (CPCB Method)
+
+We implemented the official **CPCB breakpoint interpolation formula**:
+```
+AQI = ((I_hi - I_lo) / (BP_hi - BP_lo)) × (C - BP_lo) + I_lo
+```
+
+Where:
+| Symbol | Meaning |
+|--------|---------|
+| C | Measured concentration of the pollutant |
+| BP_lo | Breakpoint concentration just below C |
+| BP_hi | Breakpoint concentration just above C |
+| I_lo | AQI value corresponding to BP_lo |
+| I_hi | AQI value corresponding to BP_hi |
+
+This is applied to each pollutant separately to get a **sub-index**.
+The **final AQI = maximum of all sub-indices** (never an average).
+
+---
+
+## Pollutants Monitored
+
+| Pollutant | Unit | Averaging Period |
+|-----------|------|-----------------|
+| PM2.5 | µg/m³ | 24-hour average |
+| PM10 | µg/m³ | 24-hour average |
+| SO2 | µg/m³ | 24-hour average |
+| NOx | ppb | 24-hour average |
+| NH3 | µg/m³ | 24-hour average |
+| CO | mg/m³ | 8-hour maximum |
+| O3 | µg/m³ | 8-hour maximum |
+
+> PM2.5 and PM10 use 24-hour rolling averages.
+> CO and O3 use 8-hour maximum values.
+> (Source: CPCB methodology, Reference [2])
+
+---
+
+## AQI Categories (India — CPCB Standard)
+
+| AQI Range | Category | Health Impact |
+|-----------|----------|---------------|
+| 0–50 | Good | No health risk |
+| 51–100 | Satisfactory | Minor discomfort for sensitive groups |
+| 101–200 | Moderate | Discomfort for lung/heart patients |
+| 201–300 | Poor | Breathing discomfort for most people |
+| 301–400 | Very Poor | Respiratory illness on prolonged exposure |
+| 401–500 | Severe | Health emergency — stay indoors |
+
+---
+
+## Agent Design — Why Simple Reflex?
+
+Our AQI agent is a **Simple Reflex Agent** (AIMA Chapter 2) because:
+
+- It acts only on the **current percept** (one CSV row at a time)
+- It uses **condition-action rules** (AQI value → health advisory)
+- It has **no memory** of past readings — each row is independent
+- The environment is **fully observable, episodic, static and discrete**
+```
+Percept (CSV row)
+      ↓
+Compute sub-index per pollutant using CPCB formula
+      ↓
+Final AQI = MAX of sub-indices
+      ↓
+Condition-Action Rule → Health Advisory
+      ↓
+Output to console (Actuator)
+```
+
+### Scalability
+The agent is designed for future upgrades as the course progresses:
+
+| Module | Purpose | Future Upgrade |
+|--------|---------|----------------|
+| `agent/subindex.py` | Sub-index functions | Add new pollutants here only |
+| `agent/environment.py` | Sensor data loading | Add rolling window averaging |
+| `agent/agent_core.py` | Agent function + rules | Upgrade to Model-Based agent |
+| `aqi_agent.py` | Entry point | No changes needed |
+
+**Files:**
+- `AQI_Agent/aqi_agent.py` — main agent entry point
+- `AQI_Agent/agent/` — modular components
+- `AQI_Agent/sensor_data.csv` — sensor input data## 	Concepts Covered
 
 ### Agent Types
 
@@ -174,6 +235,8 @@ python3 dls.py
 | AQI Monitor | Simple Reflex Agent | aqi_agent.py |
 | CAPTCHA | Simple Reflex Agent | turing_captcha_demo.py |
 | Turing Bot | Model-Based Agent | turing_captcha_demo.py |
+
+---
 
 ### Search Algorithms
 
@@ -264,114 +327,52 @@ Find a winning sequence for X on a 3×3 board.
 - IDDFS is complete + optimal like BFS but memory efficient like DFS
 - DLS (Depth-Limited Search) is the building block inside IDDFS
 
-
-## What is AQI?
-
-The **Air Quality Index (AQI)** is a standardized indicator that communicates
-how polluted the air currently is and the associated health risks. It unifies
-multiple pollutant measurements into a single number with a colour-coded category.
-
-> "AQI allows us to see and understand the breadth and depth of air quality
-> at a location or city, as a simple coloured symbol."
-> — Guttikunda, SIM-air Working Paper #46-2021
-
 ---
 
-### PEAS Description
+## How to Run
 
-| Component | Description |
-|-----------|-------------|
-| **Performance** | Correct AQI category and advisory per reading |
-| **Environment** | City air — PM2.5, PM10, SO2, NOx, NH3, CO, O3 |
-| **Actuators** | Console output (AQI value, category, advisory) |
-| **Sensors** | CSV file rows — one row = one hourly percept |
-
-## How AQI is Computed (CPCB Method)
-
-We implemented the official **CPCB breakpoint interpolation formula**:
-```
-AQI = ((I_hi - I_lo) / (BP_hi - BP_lo)) × (C - BP_lo) + I_lo
+### Install dependencies
+```bash
+pip install -r requirements.txt
 ```
 
-Where:
-| Symbol | Meaning |
-|--------|---------|
-| C | Measured concentration of the pollutant |
-| BP_lo | Breakpoint concentration just below C |
-| BP_hi | Breakpoint concentration just above C |
-| I_lo | AQI value corresponding to BP_lo |
-| I_hi | AQI value corresponding to BP_hi |
+### AQI Agent
+```bash
+cd AQI_Agent
+python3 aqi_agent.py
+```
 
-This is applied to each pollutant separately to get a **sub-index**.
-The **final AQI = maximum of all sub-indices** (never an average).
+### Turing Test and CAPTCHA Demo
+```bash
+cd Turing_Captcha
+python3 turing_captcha_demo.py
+```
+
+### Image CAPTCHA Generator
+```bash
+cd Turing_Captcha
+python3 captcha_image.py
+```
+
+### Search Algorithms Performance Comparison
+```bash
+cd Search_Algorithms
+python3 performance_comparison.py
+python3 problems/missionaries_cannibals.py
+python3 problems/water_jug.py
+python3 problems/eight_queens.py
+python3 problems/tic_tac_toe.py
+```
+
+### Individual Algorithm Demos
+```bash
+cd Search_Algorithms
+python3 bfs.py
+python3 dfs.py
+python3 dls.py
+```
 
 ---
-
-## Pollutants Monitored
-
-| Pollutant | Unit | Averaging Period |
-|-----------|------|-----------------|
-| PM2.5 | µg/m³ | 24-hour average |
-| PM10 | µg/m³ | 24-hour average |
-| SO2 | µg/m³ | 24-hour average |
-| NOx | ppb | 24-hour average |
-| NH3 | µg/m³ | 24-hour average |
-| CO | mg/m³ | 8-hour maximum |
-| O3 | µg/m³ | 8-hour maximum |
-
-> PM2.5 and PM10 use 24-hour rolling averages.
-> CO and O3 use 8-hour maximum values.
-> (Source: CPCB methodology, Reference [2])
-
----
-
-## AQI Categories (India — CPCB Standard)
-	
-| AQI Range | Category | Health Impact |
-|-----------|----------|---------------|
-| 0–50 | Good | No health risk |
-| 51–100 | Satisfactory | Minor discomfort for sensitive groups |
-| 101–200 | Moderate | Discomfort for lung/heart patients |
-| 201–300 | Poor | Breathing discomfort for most people |
-| 301–400 | Very Poor | Respiratory illness on prolonged exposure |
-| 401–500 | Severe | Health emergency — stay indoors |
-
----
-
-## Agent Design — Why Simple Reflex?
-
-Our AQI agent is a **Simple Reflex Agent** (AIMA Chapter 2) because:
-
-- It acts only on the **current percept** (one CSV row at a time)
-- It uses **condition-action rules** (AQI value → health advisory)
-- It has **no memory** of past readings — each row is independent
-- The environment is **fully observable, episodic, static and discrete**
-```
-Percept (CSV row)
-      ↓
-Compute sub-index per pollutant using CPCB formula
-      ↓
-Final AQI = MAX of sub-indices
-      ↓
-Condition-Action Rule → Health Advisory
-      ↓
-Output to console (Actuator)
-```
-
-### Scalability
-The agent is designed for future upgrades as the course progresses:
-
-| Module | Purpose | Future Upgrade |
-|--------|---------|----------------|
-| `agent/subindex.py` | Sub-index functions | Add new pollutants here only |
-| `agent/environment.py` | Sensor data loading | Add rolling window averaging |
-| `agent/agent_core.py` | Agent function + rules | Upgrade to Model-Based agent |
-| `aqi_agent.py` | Entry point | No changes needed |
-
-**Files:**
-- `AQI_Agent/aqi_agent.py` — main agent entry point
-- `AQI_Agent/agent/` — modular components
-- `AQI_Agent/sensor_data.csv` — sensor input data
 
 ## Domain References
 
