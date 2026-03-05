@@ -21,12 +21,16 @@ AI_Assignment_2/
 ├── Turing_Captcha/
 │   ├── architecture_design.md
 │   ├── captcha_generator.py
-│   └── captcha_demo.py
+│   ├── captcha_demo.py
+│   ├── captcha_image.py
+│   ├── captcha_sample.png
+│   └── turing_captcha_demo.py
 │
 ├── AQI_Agent/
 │   ├── aqi_agent.py
 │   ├── sensor_data.csv
 │   └── agent/
+│       ├── __init__.py
 │       ├── subindex.py
 │       ├── environment.py
 │       └── agent_core.py
@@ -42,6 +46,17 @@ AI_Assignment_2/
         ├── eight_queens.py
         └── tic_tac_toe.py
 ```
+
+---
+	
+## Table of Contents
+1. [Turing Test & CAPTCHA](#1-turing-test--captcha)
+2. [AQI Simple Reflex Agent](#2-aqi-reflex-agent)
+3. [Search Algorithms](#3-search-algorithms)
+4. [Performance Results](#performance-comparison-results)
+5. [How to Run](#how-to-run)
+6. [Team](#team)
+7. [Domain References](#domain-references)
 
 ---
 
@@ -74,8 +89,8 @@ Communication Interface
       ↙              ↘
 AI Agent          Human Participant
       ↘              ↙
-   Judge's Decision
-      ↓
+      Judge's Decision
+          ↓
 Human / Machine verdict
 
 CAPTCHA:
@@ -124,23 +139,27 @@ cd Turing_Captcha
 python3 turing_captcha_demo.py
 ```
 
-### Search Algorithms & Performance Comparison
+### Image CAPTCHA Generator
+```bash
+cd Turing_Captcha
+python3 captcha_image.py
+```
+
+### Search Algorithms Performance Comparison
 ```bash
 cd Search_Algorithms
-
-python3 bfs.py
-python3 dfs.py
 python3 performance_comparison.py
-
 python3 problems/missionaries_cannibals.py
 python3 problems/water_jug.py
 python3 problems/eight_queens.py
 python3 problems/tic_tac_toe.py
 ```
 
-### DLS (Depth-Limited Search) Demo
+### Individual Algorithm Demos
 ```bash
 cd Search_Algorithms
+python3 bfs.py
+python3 dfs.py
 python3 dls.py
 ```
 
@@ -229,6 +248,22 @@ Find a winning sequence for X on a 3×3 board.
 |--|-------|
 | Initial State | All cells empty |
 | Goal State | 3 X's in a row/column/diagonal |
+
+## Performance Comparison Results
+
+| Problem | BFS Nodes | DFS Nodes | IDDFS Nodes | BFS Time | DFS Time | IDDFS Time |
+|---------|-----------|-----------|-------------|----------|----------|------------|
+| Water Jug | 11 | 7 | 92 | 0.109ms | 0.059ms | 0.192ms |
+| Missionaries & Cannibals | 13 | 12 | 184 | 0.178ms | 0.114ms | 0.993ms |
+| 6-Queens | 114 | 32 | 388 | 1.480ms | 0.237ms | 2.167ms |
+| Tic Tac Toe | 56 | 6 | — | 0.666ms | 0.090ms | — |
+
+**Key Observations:**
+- BFS always finds shortest path but expands more nodes
+- DFS is faster and uses less memory but not always optimal
+- IDDFS is complete + optimal like BFS but memory efficient like DFS
+- DLS (Depth-Limited Search) is the building block inside IDDFS
+
 
 ## What is AQI?
 
