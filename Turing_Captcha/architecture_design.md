@@ -20,8 +20,6 @@ In the test:
 
 ## Capabilities Required
 
-According to *Artificial Intelligence: A Modern Approach*, a system capable of passing the Turing Test requires:
-
 * **Natural Language Processing (NLP)** — to understand and generate human language
 * **Knowledge Representation** — to store facts about the world
 * **Automated Reasoning** — to answer questions and draw conclusions
@@ -29,20 +27,16 @@ According to *Artificial Intelligence: A Modern Approach*, a system capable of p
 
 ---
 
-## Turing Test Architecture
+## Architecture
 ```
 +--------------------------------------------------+
 |                 TURING TEST SYSTEM               |
 +-----------------------+--------------------------+
 |       HUMAN SIDE      |       MACHINE SIDE       |
 |                       |                          |
-| Human types message   |  Natural Language        |
-|                       |  Processing (NLP)        |
-|                       |                          |
+| Human types message   |  NLP Engine              |
 |                       |  Dialogue Manager        |
-|                       |                          |
 |                       |  Knowledge Base          |
-|                       |                          |
 |                       |  Response Generator      |
 +-----------------------+--------------------------+
             |
@@ -59,34 +53,25 @@ According to *Artificial Intelligence: A Modern Approach*, a system capable of p
 
 **CAPTCHA** — Completely Automated Public Turing test to tell Computers and Humans Apart.
 
-It prevents **automated bots** from performing actions such as:
-
-* creating fake accounts
-* submitting spam forms
-* brute-force login attempts
-
-CAPTCHA relies on tasks **easy for humans but difficult for machines**.
+Prevents bots from: creating fake accounts, spamming forms, brute-force login attempts.
 
 ---
 
-## CAPTCHA Architecture
+## Architecture
 
 ### Step 1 — Challenge Generator
-
-* Generate random string or image
-* Apply distortion and noise
-* Store correct answer
+- Generate random string or image
+- Apply distortion and noise
+- Store correct answer
 
 ### Step 2 — User Interface
-
-* Display challenge to user
-* Accept typed or click response
+- Display challenge to user
+- Accept typed or click response
 
 ### Step 3 — Response Verification
-
-* Compare response to stored answer
-* Check timing (too fast = bot)
-* Detect suspicious behaviour
+- Compare response to stored answer
+- Check timing (too fast = bot)
+- Detect suspicious behaviour
 
 ### Result
 ```
